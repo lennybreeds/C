@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <math.h>
 int number_of_records = 0;
-int buffer_size = 21;
-char line_buffer[21];
+char buffer_size = 22;
+char line_buffer[22];
 char date; 
 char time; 
 char steps;
@@ -24,7 +24,8 @@ void tokeniseRecord(const char *input, const char *delimiter, char *date, char *
     
     // Tokenize the copied string
     char *token = strtok(inputCopy, delimiter);
-    if (token != NULL) {        strcpy(date, token);
+    if (token != NULL) {
+        strcpy(date, token);
     }
     
     token = strtok(NULL, delimiter);
@@ -100,19 +101,20 @@ void lognestPeriod(){
     int end = NULL;
     int best = 0;
     for(int i=0;i<number_of_records;i++){
-        printf("%d: %d %d %d %d\n",i,start,end,best,fitnessdata[i].steps);
         if (start == NULL){
             if (fitnessdata[i].steps > 500){
                 start = i;
             }
-        }else if ( start != NULL && fitnessdata[i].steps < 500 && (i-start) > best){
-            end = i;
-            best = i - start;
+        }else if (fitnessdata[i].steps < 500){
+            if ((i-start) > best){
+                end = i;
+                best = i - start;
+            }
             start = NULL;
         }
     }
     printf("Longest period start: %s %s\n",fitnessdata[end-best].date,fitnessdata[end-best].time);
-    printf("Longest period end: %s %s\n",fitnessdata[end].date,fitnessdata[end].time);
+    printf("Longest period end: %s %s\n",fitnessdata[end-1].date,fitnessdata[end-1].time);
 }
 
 #endif // FITNESS_DATA_STRUCT_H
